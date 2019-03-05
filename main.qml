@@ -16,7 +16,14 @@ Page {
     property alias interSpace: interSpaceSpin.value
     property alias numPts: numPointsSpin.value
     property alias numPtsMax: numPointsSpin.to
-    property alias shape: shapeCombo.currentText
+    property alias shapeIdx: shapeCombo.currentIndex
+
+    signal sendCreateLine(var num_pts, var inter_space, var shape_idx)
+
+    function createLine() {
+        console.log("(onCreateLine) Creating line with " + numPts + " points; spaced at " + interSpace);
+        sendCreateLine(numPts, interSpace, shapeIdx)
+    }
 
     title: qsTr("Hello World")
 
@@ -66,6 +73,20 @@ Page {
                 displayText = shapeModel.index(currentIndex, currentIndex).name
             }
 
+        }
+
+        Button {
+            id: createButton
+            text: qsTr("CREATE")
+            spacing: 3
+
+            onClicked: {
+                rootWindow.createLine()
+            }
+
+            /*Component.onCompleted: {
+                onClicked.connect(rootWindow.createLine)
+            }*/
         }
     }
 

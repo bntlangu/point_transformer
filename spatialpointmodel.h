@@ -7,6 +7,12 @@
 struct SpatialPoint
 {
 public:
+    SpatialPoint()
+        : m_X(0),
+          m_Y(0),
+          m_Z(0)
+    {}
+
     SpatialPoint(const float &X,
                  const float &Y,
                  const float &Z
@@ -49,6 +55,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 
+    void clearModel();
 
 signals:
 
@@ -59,7 +66,7 @@ protected:
 
 private:
 
-    QList<SpatialPoint> m_SpatialPts;
+    QVector<SpatialPoint> m_SpatialPts;
 };
 
 //Q_DECLARE_METATYPE(SpatialPointModel)

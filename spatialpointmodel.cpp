@@ -41,6 +41,13 @@ QVariant SpatialPointModel::data(const QModelIndex &index, int role) const
     }
 }
 
+void SpatialPointModel::clearModel()
+{
+    beginResetModel();
+    m_SpatialPts.resize(0);
+    endResetModel();
+}
+
 QHash<int, QByteArray> SpatialPointModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
