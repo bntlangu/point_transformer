@@ -12,5 +12,12 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    // <TODO>
+    // Provide slots for the signals generated from the controls on the UI
+    // to create the corresponding list of points
+    // Generate the list of points
+    // Plot the list of points using scatter 3d
+
+
     return app.exec();
 }
