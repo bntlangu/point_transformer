@@ -12,6 +12,15 @@ enum SHAPE_TYPE{
 };
 Q_DECLARE_METATYPE(SHAPE_TYPE)
 
+enum ROTATION_AXIS{
+    X_AXIS = 0,
+    Y_AXIS,
+    Z_AXIS,
+    ALL_AXES
+
+};
+Q_DECLARE_METATYPE(ROTATION_AXIS)
+
 class SpatialPointManager : public QObject
 {
     Q_OBJECT
@@ -44,11 +53,17 @@ public slots:
 
     // This function takes an input value from the UI "rotation" slider and converts it to an
     // angle value, which in turn is used to set X, Y, and Z coordinates of each point in the model.
-    void applyRotationTransform(const QVariant& rotationVal);
+    void applyRotationTransform(const QVariant& rotationVal, const QVariant &rotationAxis);
 
 private:
 
-    void performRotation(QVector &pts, const float &angle);
+    void performRotation(QVector<SpatialPoint> &pts, const QGenericMatrix<3,3,qreal> &transformMtx);
+
+    void setRotationAngle(const qreal &angle, const ROTATION_AXIS &axis);
+
+    QGenericMatrix<3,3,qreal> m_xAxisRotation;
+    QGenericMatrix<3,3,qreal> m_yAxisRotation;
+    QGenericMatrix<3,3,qreal> m_zAxisRotation;
 
 };
 

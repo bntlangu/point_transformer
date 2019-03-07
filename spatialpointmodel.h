@@ -3,33 +3,27 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QGenericMatrix>
 
 struct SpatialPoint
 {
 public:
     SpatialPoint()
-        : m_X(0),
-          m_Y(0),
-          m_Z(0)
-    {}
+        { m_point(0,0) = 0.0; m_point(0,1) = 0.0; m_point(0,2) = 0.0; }
 
-    SpatialPoint(const float &X,
-                 const float &Y,
-                 const float &Z
-                 )
-        : m_X(X),
-          m_Y(Y),
-          m_Z(Z)
-    {}
+    SpatialPoint(const qreal &X, const qreal &Y, const qreal &Z)
+        { m_point(0,0) = X; m_point(0,1) = Y; m_point(0,2) = Z; }
 
-    float X() const {return m_X;}
-    float Y() const {return m_Y;}
-    float Z() const {return m_Z;}
+    float X() const { return float(m_point(0,0)); }
+    float Y() const { return float(m_point(0,1)); }
+    float Z() const { return float(m_point(0,2)); }
+
+    void transformPoint(const QGenericMatrix<3,3,qreal> &transformMtx)
+        { m_point = m_point*transformMtx; } // We have assumed here that a 3x3 mtx multiplied by a 3x1 mtx results in a 3x1
+                                            // verify that the reult produced is indeed consistent with the expectd answer.
 
 private:
-    float m_X;
-    float m_Y;
-    float m_Z;
+    QGenericMatrix<3,1,qreal> m_point;
 };
 
 
@@ -57,6 +51,8 @@ public:
 
     void clearModel();
 
+    QVector<SpatialPoint> m_SpatialPts;
+
 signals:
 
 public slots:
@@ -65,8 +61,6 @@ protected:
     QHash<int,QByteArray> roleNames() const;
 
 private:
-
-    QVector<SpatialPoint> m_SpatialPts;
 };
 
 //Q_DECLARE_METATYPE(SpatialPointModel)

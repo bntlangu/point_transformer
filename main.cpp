@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
     );
 
     QObject::connect(
-        rootItem, SIGNAL(requestRotationTransform(QVariant)),
-        &ptsMgr, SLOT(applyRotationTransform(QVariant))
+        rootItem, SIGNAL(requestRotationTransform(QVariant, QVariant)),
+        &ptsMgr, SLOT(applyRotationTransform(QVariant, QVariant))
     );
 
     // Connect the signals from the point manager to the data view

@@ -71,11 +71,78 @@ void SpatialPointManager::applySizeTransform(const QVariant &sizeVal)
 
 // Here we make the assumption that the input value coming in from
 // the UI is on the range [0,360] i.e. angle in degrees.
-void SpatialPointManager::applyRotationTransform(const QVariant &rotationVal)
+void SpatialPointManager::applyRotationTransform(const QVariant &rotationVal, const QVariant &rotationAxis)
 {
     // Convert integer value to angle (radians)
-    float fRotationAngle = (rotationVal.toFloat() / float(360.0)) * float(2.0*M_PI);
+    qreal angle = qDegreesToRadians(rotationVal.toReal());// (rotationVal.toFloat() / float(360.0)) * float(2.0*M_PI);
+    ROTATION_AXIS axis = ROTATION_AXIS(rotationAxis.toInt());
+    setRotationAngle(angle, axis);
 
-    // Apply the requisite transform on each point
+    qDebug() << "(applyRotationTransform) Angle: " << angle << "; Axis: " << axis;
 
+    switch(axis){
+    case X_AXIS:
+        performRotation(m_ptsModel.m_SpatialPts, m_xAxisRotation);
+        break;
+    case Y_AXIS:
+        performRotation(m_ptsModel.m_SpatialPts, m_yAxisRotation);
+        break;
+    case Z_AXIS:
+        performRotation(m_ptsModel.m_SpatialPts, m_zAxisRotation);
+        break;
+    case ALL_AXES:
+        break;
+    }
+
+    // Partition the data to allocate to the requisitie number of threads
+}
+
+void SpatialPointManager::performRotation(QVector<SpatialPoint> &pts, const QGenericMatrix<3,3,qreal> &transformMtx)
+{
+    // <TODO> Determine the ideal number of threads available
+
+    for ( int i = 0; i < pts.size(); i++ ){
+        pts[i].transformPoint(transformMtx);
+    }
+}
+
+void SpatialPointManager::setRotationAngle(const qreal &angle, const ROTATION_AXIS &axis)
+{
+    switch(axis){
+    case X_AXIS:
+        m_xAxisRotation(0,0) = 1;
+        m_xAxisRotation(0,1) = 0;
+        m_xAxisRotation(0,2) = 0;
+        m_xAxisRotation(1,0) = 0;
+        m_xAxisRotation(1,1) = cos(angle);
+        m_xAxisRotation(1,2) = sin(angle);
+        m_xAxisRotation(2,0) = 0;
+        m_xAxisRotation(2,1) = -sin(angle);
+        m_xAxisRotation(2,2) = cos(angle);
+        break;
+    case Y_AXIS:
+        m_yAxisRotation(0,0) = cos(angle);
+        m_yAxisRotation(0,1) = 0;
+        m_yAxisRotation(0,2) = -sin(angle);
+        m_yAxisRotation(1,0) = 0;
+        m_yAxisRotation(1,1) = 1;
+        m_yAxisRotation(1,2) = 0;
+        m_yAxisRotation(2,0) = sin(angle);
+        m_yAxisRotation(2,1) = 0;
+        m_yAxisRotation(2,2) = cos(angle);
+        break;
+    case Z_AXIS:
+        m_zAxisRotation(0,0) = cos(angle);
+        m_zAxisRotation(0,1) = sin(angle);
+        m_zAxisRotation(0,2) = 0;
+        m_zAxisRotation(1,0) = -sin(angle);
+        m_zAxisRotation(1,1) = cos(angle);
+        m_zAxisRotation(1,2) = 0;
+        m_zAxisRotation(2,0) = 0;
+        m_zAxisRotation(2,1) = 0;
+        m_zAxisRotation(2,2) = 1;
+        break;
+    case ALL_AXES:
+        break;
+    }
 }

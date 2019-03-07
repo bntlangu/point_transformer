@@ -25,7 +25,7 @@ Page {
 
     signal requestSizeTransform(var size)
     signal requestColorTransform(var color)
-    signal requestRotationTransform(var angle)
+    signal requestRotationTransform(var angle, var axis)
 
     function createLine() {
         console.log("(onCreateLine) Creating line with " + numPts + " points; spaced at " + interSpace);
@@ -202,7 +202,7 @@ Page {
                     value: 0.5
 
                     onValueChanged: {
-                        requestRotationTransform(value)
+                        requestRotationTransform(value, 0)
                     }
                 }
             }
