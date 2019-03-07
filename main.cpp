@@ -26,19 +26,39 @@ int main(int argc, char *argv[])
 
     QObject* rootItem = view.rootObject();// implicit cast from "QQuickItem" is happening here
 
-    //QObject* pThreadInput = rootItem->findChild<QObject*>("workCreator");
-
-    // Connect the workermgr to app's signals
+    // Connect the signals from the shape creation controls to the point manager
     QObject::connect(
         rootItem, SIGNAL(sendCreateLine(QVariant, QVariant, QVariant)),
         &ptsMgr, SLOT(createLine(QVariant, QVariant, QVariant))
     );
 
-    // <TODO>
-    // Provide slots for the signals generated from the controls on the UI
-    // to create the corresponding list of points
-    // Generate the list of points
-    // Plot the list of points using scatter 3d
+    // Connect the signals from the point attribute controls to the point manager
+    QObject::connect(
+        rootItem, SIGNAL(requestSizeTransform(QVariant)),
+        &ptsMgr, SLOT(applySizeTransform(QVariant))
+    );
+
+    QObject::connect(
+        rootItem, SIGNAL(requestColorTransform(QVariant)),
+        &ptsMgr, SLOT(applyColorTransform(QVariant))
+    );
+
+    QObject::connect(
+        rootItem, SIGNAL(requestRotationTransform(QVariant)),
+        &ptsMgr, SLOT(applyRotationTransform(QVariant))
+    );
+
+    // Connect the signals from the point manager to the data view
+    QObject::connect(
+        &ptsMgr, SIGNAL(updateSize(QVariant)),
+        rootItem, SLOT(onApplySizeUpdate(QVariant))
+    );
+
+    QObject::connect(
+        &ptsMgr, SIGNAL(updateColor(QVariant)),
+        rootItem, SLOT(onApplyColorUpdate(QVariant))
+    );
+
 
 
     return app.exec();

@@ -2,6 +2,8 @@
 #define SPATIALPOINTMANAGER_H
 
 #include <QObject>
+#include <QVector>
+
 #include <spatialpointmodel.h>
 
 enum SHAPE_TYPE{
@@ -18,14 +20,35 @@ public:
 
     SpatialPointModel m_ptsModel;
 
+
 signals:
+
+    void updateColor(const QVariant &colorVal);
+
+    void updateSize(const QVariant &sizeVal);
+
+    // This shouldn't be necessary since the model should be automatically updated when changed.
+    void updatePts();
 
 public slots:
 
     void createLine(const QVariant &num_pts, const QVariant &inter_space, const QVariant &shape_idx);
 
+    // This function takes an input value from the UI "color" slider and converts it to a
+    // hex color string, which in turn is used to set the base color of the points.
+    void applyColorTransform(const QVariant &colorVal);
+
+    // This function takes an input value from the UI "size" slider and converts it to a
+    // size value, which in turn is used to set the size of the points on the plot.
+    void applySizeTransform(const QVariant& sizeVal);
+
+    // This function takes an input value from the UI "rotation" slider and converts it to an
+    // angle value, which in turn is used to set X, Y, and Z coordinates of each point in the model.
+    void applyRotationTransform(const QVariant& rotationVal);
 
 private:
+
+    void performRotation(QVector &pts, const float &angle);
 
 };
 

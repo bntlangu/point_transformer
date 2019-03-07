@@ -1,3 +1,4 @@
+#include <QtMath>
 #include "spatialpointmanager.h"
 
 SpatialPointManager::SpatialPointManager(QObject *parent) : QObject(parent)
@@ -43,4 +44,38 @@ void SpatialPointManager::createLine(const QVariant &num_pts, const QVariant &in
             y += inter_space.toInt();
         }
     }
+}
+
+// Here we make the assumption that the input value coming in from
+// the UI is on the range [0,16777216] i.e. 24-bit color (2^24)
+void SpatialPointManager::applyColorTransform(const QVariant &colorVal)
+{
+    uint32_t uColorVal = colorVal.toUInt()*10;
+
+    // Convert integer value into hex
+    QString strColor = QString("#%1").arg(uColorVal, 6, 16, QLatin1Char( '0' ));
+
+    // Push the hex string back to the UI
+    emit updateColor(strColor);
+}
+
+// Here we make the assumption that the input value coming in from
+// the UI is on the range [0,1]
+void SpatialPointManager::applySizeTransform(const QVariant &sizeVal)
+{
+    float fSize = sizeVal.toFloat();
+
+    // Push the hex string back to the UI
+    emit updateSize(fSize);
+}
+
+// Here we make the assumption that the input value coming in from
+// the UI is on the range [0,360] i.e. angle in degrees.
+void SpatialPointManager::applyRotationTransform(const QVariant &rotationVal)
+{
+    // Convert integer value to angle (radians)
+    float fRotationAngle = (rotationVal.toFloat() / float(360.0)) * float(2.0*M_PI);
+
+    // Apply the requisite transform on each point
+
 }
