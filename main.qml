@@ -7,8 +7,8 @@ import QtDataVisualization 1.0
 Page {
     id: rootWindow
     visible: true
-    width: implicitWidth
-    height: 480
+    height: 720
+    width: 800
 
     property alias colorSliderValue: colorSlider.value
     property alias sizeSliderValue: sizeSlider.value
@@ -46,9 +46,11 @@ Page {
 
     ColumnLayout{
 
-        RowLayout{
+        Layout.fillWidth: true
 
+        RowLayout{
             id: inputControl
+            Layout.fillWidth: true
 
             Label {
                 id: label
@@ -104,26 +106,30 @@ Page {
             }
         }
 
-        Theme3D {
-            id: themeIsabelle
-            type: Theme3D.ThemeIsabelle
-            font.family: "Lucida Handwriting"
-            font.pointSize: 40
-        }
-
         Item {
             id: dataView
-
-            width: inputControl.width
             height: rootWindow.height - inputControl.height - ptControls.height
+            Layout.fillWidth: true
+
+            Theme3D {
+                id: themeIsabelle
+                type: Theme3D.ThemeIsabelle
+                font.family: "Lucida Handwriting"
+                font.pointSize: 40
+            }
 
             Scatter3D {
                 id: scatterGraph
                 width: dataView.width
                 height: dataView.height
-
                 theme: themeIsabelle
                 shadowQuality: AbstractGraph3D.ShadowQualitySoftLow
+
+                axisX: ValueAxis3D{max: 10;  min: -10}
+                axisY: ValueAxis3D{max: 10;  min: -10}
+                axisZ: ValueAxis3D{max: 10;  min: -10}
+
+
 
                 Scatter3DSeries {
                     id: scatterSeries
@@ -147,65 +153,110 @@ Page {
 
         ColumnLayout{
             id: ptControls
+            Layout.fillWidth: true
+            anchors.top: dataView.bottom
 
             RowLayout{
-                id: sizeControl
+                RowLayout{
+                    id: sizeControl
 
-                Label {
-                    text: qsTr("Point size (pixels)")
-                    verticalAlignment: Text.AlignVCenter
+                    Label {
+                        text: qsTr("Point size (pixels)")
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    Slider {
+                        id: sizeSlider
+                        stepSize: 0.01
+                        value: 0.5
+
+                        onValueChanged: {
+                            requestSizeTransform(value)
+                        }
+                    }
                 }
 
-                Slider {
-                    id: sizeSlider
-                    stepSize: 0.01
-                    value: 0.5
+                RowLayout{
+                    id: colorControl
 
-                    onValueChanged: {
-                        requestSizeTransform(value)
+                    Label {
+                        text: qsTr("Point color")
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    Slider {
+                        id: colorSlider
+                        stepSize: 100
+                        to: 1677721
+                        value: 1
+
+                        onValueChanged: {
+                            requestColorTransform(value)
+                        }
                     }
                 }
             }
 
             RowLayout{
-                id: colorControl
+                id: xRotControl
 
                 Label {
-                    text: qsTr("Point color")
+                    text: qsTr("Rotate X")
                     verticalAlignment: Text.AlignVCenter
                 }
 
                 Slider {
-                    id: colorSlider
-                    stepSize: 100
-                    to: 1677721
-                    value: 1
-
-                    onValueChanged: {
-                        requestColorTransform(value)
-                    }
-                }
-            }
-
-            RowLayout{
-                id: rotControl
-
-                Label {
-                    text: qsTr("Point rotation")
-                    verticalAlignment: Text.AlignVCenter
-                }
-
-                Slider {
-                    id: rotSlider
+                    id: xRotSlider
                     stepSize: 1
                     to: 360
-                    value: 0.5
+                    value: 0.1
 
                     onValueChanged: {
                         requestRotationTransform(value, 0)
                     }
                 }
             }
+
+            RowLayout{
+                id: yRotControl
+
+                Label {
+                    text: qsTr("Rotate Y")
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Slider {
+                    id: yRotSlider
+                    stepSize: 1
+                    to: 360
+                    value: 0.1
+
+                    onValueChanged: {
+                        requestRotationTransform(value, 1)
+                    }
+                }
+            }
+
+            RowLayout{
+                id: zRotControl
+
+                Label {
+                    text: qsTr("Rotate Z")
+                    verticalAlignment: Text.AlignVCenter
+                }
+
+                Slider {
+                    id: zRotSlider
+                    stepSize: 1
+                    to: 360
+                    value: 0.1
+
+                    onValueChanged: {
+                        requestRotationTransform(value, 2)
+                    }
+                }
+            }
+
         }
     }
 }

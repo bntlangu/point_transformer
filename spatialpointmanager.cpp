@@ -74,39 +74,41 @@ void SpatialPointManager::applySizeTransform(const QVariant &sizeVal)
 void SpatialPointManager::applyRotationTransform(const QVariant &rotationVal, const QVariant &rotationAxis)
 {
     // Convert integer value to angle (radians)
-    qreal angle = qDegreesToRadians(rotationVal.toReal());// (rotationVal.toFloat() / float(360.0)) * float(2.0*M_PI);
+    qreal angle = qDegreesToRadians(rotationVal.toReal());
     ROTATION_AXIS axis = ROTATION_AXIS(rotationAxis.toInt());
-    setRotationAngle(angle, axis);
+    m_ptsModel.setRotationAngle(angle, axis);
+    m_ptsModel.transformModel();
 
     qDebug() << "(applyRotationTransform) Angle: " << angle << "; Axis: " << axis;
 
-    switch(axis){
+    /*switch(axis){
     case X_AXIS:
-        performRotation(m_ptsModel.m_SpatialPts, m_xAxisRotation);
+        //performRotation(m_ptsModel.m_SpatialPts, m_xAxisRotation);
+        m_ptsModel.transformModel(axis);
         break;
     case Y_AXIS:
-        performRotation(m_ptsModel.m_SpatialPts, m_yAxisRotation);
+        //performRotation(m_ptsModel.m_SpatialPts, m_yAxisRotation);
+        m_ptsModel.transformModel(m_yAxisRotation);
         break;
     case Z_AXIS:
-        performRotation(m_ptsModel.m_SpatialPts, m_zAxisRotation);
+        //performRotation(m_ptsModel.m_SpatialPts, m_zAxisRotation);
+        m_ptsModel.transformModel(m_zAxisRotation);
         break;
     case ALL_AXES:
         break;
-    }
-
-    // Partition the data to allocate to the requisitie number of threads
+    }*/
 }
 
-void SpatialPointManager::performRotation(QVector<SpatialPoint> &pts, const QGenericMatrix<3,3,qreal> &transformMtx)
+/*void SpatialPointManager::performRotation(QVector<SpatialPoint> &pts, const QGenericMatrix<3,3,qreal> &transformMtx)
 {
     // <TODO> Determine the ideal number of threads available
 
     for ( int i = 0; i < pts.size(); i++ ){
         pts[i].transformPoint(transformMtx);
     }
-}
+}*/
 
-void SpatialPointManager::setRotationAngle(const qreal &angle, const ROTATION_AXIS &axis)
+/*void SpatialPointManager::setRotationAngle(const qreal &angle, const ROTATION_AXIS &axis)
 {
     switch(axis){
     case X_AXIS:
@@ -145,4 +147,4 @@ void SpatialPointManager::setRotationAngle(const qreal &angle, const ROTATION_AX
     case ALL_AXES:
         break;
     }
-}
+}*/

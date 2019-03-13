@@ -59,7 +59,5 @@ int main(int argc, char *argv[])
         rootItem, SLOT(onApplyColorUpdate(QVariant))
     );
 
-
-
     return app.exec();
 }

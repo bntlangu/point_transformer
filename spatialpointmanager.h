@@ -12,15 +12,6 @@ enum SHAPE_TYPE{
 };
 Q_DECLARE_METATYPE(SHAPE_TYPE)
 
-enum ROTATION_AXIS{
-    X_AXIS = 0,
-    Y_AXIS,
-    Z_AXIS,
-    ALL_AXES
-
-};
-Q_DECLARE_METATYPE(ROTATION_AXIS)
-
 class SpatialPointManager : public QObject
 {
     Q_OBJECT
@@ -58,12 +49,6 @@ public slots:
 private:
 
     void performRotation(QVector<SpatialPoint> &pts, const QGenericMatrix<3,3,qreal> &transformMtx);
-
-    void setRotationAngle(const qreal &angle, const ROTATION_AXIS &axis);
-
-    QGenericMatrix<3,3,qreal> m_xAxisRotation;
-    QGenericMatrix<3,3,qreal> m_yAxisRotation;
-    QGenericMatrix<3,3,qreal> m_zAxisRotation;
 
 };
 
